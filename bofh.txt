@@ -1,0 +1,301 @@
+           -------------------------
+                   B O F H :
+           Servers Under Siege V1.61
+           -------------------------
+                An action game
+
+
+LICENSE/DISCLAIMER:
+
+See LICENSE.TXT. If you come across earlier versions
+of BOFH consider them now being under the same
+license too.
+
+
+HOW TO RUN:
+
+Simply run BOFH.EXE. It is a 32-bit Windows program
+that will run on Windows 95/98/NT4/2000/ME. In theory
+it runs on a 386 but at least a fast 486 or Pentium
+is required for reasonably smooth gameplay. DirectX
+version 2 or better is required.
+
+BOFH requires about 5MB of memory to run.
+
+To save high scores & screenmode configuration,
+BOFH.EXE needs to be able to create files called
+BOFH.HSC & BOFH.CFG in the directory from where
+it was run.
+
+
+THE STORY:
+
+A group of insane activists called the "Internet
+Salvation Force" has invaded a school, taking
+all servers and workstations as hostages. They
+don't care of human hostages so all the personnel
+have been told to leave. As the BOFH, you arrive
+late at work, and find the building unusually
+quiet...
+
+
+THE MISSION:
+
+Enraged that the computers have been taken away
+from your command, you decide to fight the
+activists alone. Your goal is to reclaim the
+server room at the sixth floor, but first you
+must defuse the bombs the activists have placed
+at network closets around the building. Search
+the activists you have killed for extra weapons,
+first aid kits and bomb defusing instructions.
+Also seek useful tools from the building.
+
+
+HOW TO PLAY:
+
+You see your BOFH, and the surroundings from an
+overhead view. Use cursor keys or mouse movement
+to move forwards/backwards and to turn left/right.
+
+Press ALT + CURSOR LEFT/RIGHT or END/PAGEDOWN to
+move sideways (strafe).
+Press SHIFT +  CURSOR UP/DOWN to move slowly.
+Press SPACE or LEFT MOUSE BUTTON to attack.
+Press ENTER or RIGHT MOUSE BUTTON to change weapon.
+
+Other keys:
+P         - Pause game
+ESC       - Quit game
+S         - Sight line on/off
+M         - Music on/off
+V         - View bomb defusing instructions
+R,G,B,Y   - Cut Red, Green, Blue, Yellow wire
+            (when at a closet that contains a bomb)
+0-5       - Select floor to go to (when at a lift)
+F1-F10    - Select weapon directly:
+            F1 = Fists
+            F2 = CAT-5 Whip
+            F3 = Drill
+            F4 = Pistol
+            F5 = Shotgun
+            F6 = Uzi
+            F7 = Grenade
+            F8 = Bazooka
+            F9 = Crossbow
+            F10 = Scanner
+F11       - Toggle between Waveout & DirectSound
+F12       - Toggle screenmode between 320x200,
+            640x400 scanlines and 640x400 doublesize
+ALT-ENTER - Toggle between fullscreen and windowed mode
+
+
+STATUS:
+
+The status line at the bottom of screen shows your
+score, health, time until the bombs explode, number
+of bombs/activists/computers remaining, and your
+current weapon and ammunition left.
+
+
+DEFEAT/VICTORY:
+
+The game is lost if your BOFH dies, or if the bombs
+explode. You have won if all bombs have been defused,
+the leaders hiding in the server room have been
+defeated and you're still alive.
+
+
+HINTS:
+
+* Technicians (with a distinctive uniform) carry the
+  bomb defusing instructions. As they see you they
+  try to run away - it might be hard to find them
+  again if you let them go!
+
+* Try to sneak up on an enemy from behind.
+
+* Conserve ammunition by punching or whipping unarmed
+  activists. Silent methods of attack will not attract
+  enemies as much as gunfire & explosions.
+
+* The crossbow is at its best when enemies haven't
+  noticed you yet.
+
+* Use grenades & bazooka with caution: they can cause
+  much damage, also to you!
+
+* The scanner (if you find it) will show nearby
+  activists (RED color), computers (GREEN color)
+  and collectable items (YELLOW colors). You can
+  not use any weapons while using it, and its battery
+  will deplete quickly when used.
+
+* If an enemy drops a first aid kit and you're already
+  at full health, try to remember the place - you'll
+  need it later... Same goes for ammunition (there's
+  a certain maximum of bullets you can carry.)
+
+* Every time you go up/down stairs reduces time by
+  10 seconds. So try to plan your route with minimal
+  floor changes, or use lifts.
+
+* Be prepared when you enter the server room - the
+  leaders might have powerful weaponry.
+
+* If you win, bonus is awarded for survived computers.
+  Servers are considered valuable, so try to persuade
+  the leaders to exit the server room and combat them
+  outside.
+
+* If you defuse a bomb without instructions (by
+  guessing) you receive a large bonus. However, this
+  is not recommended...
+
+
+CREDITS:
+
+Main Design & Programming:
+Lasse Öörni (Cadaver)
+
+Additional Design & Programming
+Kalle Niemitalo
+Olli Niemitalo (Yehar)
+
+Graphics
+Lasse Öörni
+Olli Niemitalo
+
+Voices, Gun, Fist, Whip & Explosion Sounds
+Lasse Öörni
+
+Drill, Shell, Shotgun Loading & Ricochet Sounds
+Olli Niemitalo
+
+Music
+Olli Niemitalo
+Tuomas Mäkelä (Kuunvarjo)
+
+
+VERSION HISTORY:
+
+V1.0
+
+* Original, not released
+
+V1.01
+
+* Walls with floor number block vision like
+ normal walls
+* Computers made weaker
+* Computers spawn more chunks when exploding
+* When bombs explode, distant explosions don't
+  cloud the nearby explosions
+* Some messages added
+* Game over text removed
+* Small bug in background graphics removed
+
+V1.02
+
+* Group name changed to more religious :-)
+
+V1.1
+
+* More underground locations
+* More possible enemy locations
+* Difficulty levels adjusted: more activists now
+  but shotgun-men are weaker, medikits more probable
+  (and equally probable on all difficulty levels)
+* Direct selection of weapons with function keys
+* Lifts added
+* Activists use stairs too
+* Both lift & stair-movement reduce time in a
+  "fast-forward" mode
+* End-text changed a bit
+* Bonus for remaining servers (when you have won)
+  is greater now
+* Bullet movement debugged
+* Shell movement improved
+* Grenades added
+* Bazookas added
+* Interpolated fire-effect in the title screen :-)
+* Added a splash screen to the beginning
+
+V1.2
+
+* Only the necessary number of actors are gone
+  thru in the routines
+* All datafiles are now separate, in their own
+  subdirectory
+* Closet & bomb defusing instructions use now
+  fonts instead of text strings inside sprites
+* Drill is more powerful
+* Whip is a bit weaker
+* Changed the door closing sound
+* Enemies getting alerted rewritten: now different
+  sounds (gunfire, grunts, speech) alert enemies
+  from different distances
+* The threshold distance where enemies' move routines
+  are still processed is increased
+* Enemies will give up and go back patrolling if they
+  haven't seen the BOFH for a while
+* Fist-man bug of standing with arm extended fixed
+  (attack animation got stuck)
+* Added a new weapon: crossbow
+* Added a new enemy: the crossbow-wielding sadist
+* Added a scanner, which shows nearby terrorists,
+  computers and collectable items.
+* Also other random weapons (besides the bazookas)
+  and medikits can now be found from storage rooms
+  (however, all of them aren't in use in the
+  original mission)
+* Very slight background graphics changes
+* Mission files from which almost every parameter
+  can be adjusted.
+* A level editor to create mission files and
+  edit the map
+
+V1.2W
+
+* Ported the game to Windows
+* C64-music at the end replaced by hiscore music
+
+V1.3W
+
+* Corrected a bug in the JUDAS library graphics
+  functions which caused memory corruption
+* Loading & saving more user-friendly in the editor
+
+V1.4W
+
+* Ported to BME (Blasphemous Multimedia Engine,
+  replaces JUDAS library)
+* Fullscreen & windowed output
+* Scanline & doublesize mode available
+* Configuration file saves screen mode & sight-line
+  on/off preference
+* Hiscore music continues playing until new game is
+  started
+* Editor instructions back after being forgotten for
+  for some time...
+
+V1.5
+
+* Now with BSD license
+* Ported to the SDL-using version of BME
+* Weapon damage like in C64 version
+
+V1.6
+
+* Improvements from Kalle Niemitalo integrated
+  (including bugfixes and improved sadist AI)
+
+V1.61
+
+* arctan lookup table fixed
+
+
+OFFICIAL "HOMEPAGE":
+
+http://covertbitops.c64.org/misc
+

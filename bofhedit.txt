@@ -1,0 +1,39 @@
+BOFH EDITOR
+-----------
+
+F1 = Map editor
+F2 = Blockinfo editor
+F3 = Exact Actor editor
+F4 = Random Actor editor
+F5 = Stairs editor
+F6 = Network Closet editor
+F7 = Lift editor
+F8 = Mission parameters editor
+F9 = Message editor
+F10 = Helpscreen for each of the editors
+F11 = Load mission
+F12 = Save mission
+ESC = Quit
+
+To make a new mission, copy the files ORIGINAL.BLK and ORIGINAL.INF
+to <yourmission>.BLK and <yourmission>.INF in the MISSIONS subdirectory.
+Then use Load mission (F11) in the editor, it will load the blocks and
+blockinfo and then you can begin to draw your own map.
+
+Press O for Layer Options to enlarge the map. You must do this for
+both layers 1 & 2. To layer 1 you should draw floors, stairs etc.
+and to layer 2 walls, tables, doors etc. Look at the original mission
+to see how it all is done.
+
+You can also make your own blocks (and blockinfos): Create a LBM picture
+with Deluxe Paint which uses the same colors as the original BOFH
+blocks and run this commandline: (BMECONV.EXE is found from the TOOLS
+subdirectory)
+
+bmeconv -b -t255 -r254 -h253 <yourblocks>.lbm missions\<yourmission>.blk
+
+Then Load Mission in the editor and begin to create your own map, blockinfos
+and mission.
+
+Important: never place anything to location (0,0) because it is used to
+mark non-existent in the mission data!
