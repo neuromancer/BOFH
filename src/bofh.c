@@ -65,7 +65,7 @@ int avgmovex = 0;
 int avgmovey = 0;
 unsigned mouseb = 0;
 unsigned prevmouseb = 0;
-int difficulty = DIFF_EASY;
+int difficulty = DIFF_INSANE;
 int gamespeed;
 char *gamemsg;
 int trapmsg = 0;
@@ -605,6 +605,9 @@ int selectdifficulty(void)
         	                        buf[len-4] = 0;
         	                        strcpy(&missionlist[nummissions][0], buf);
         	                        nummissions++;
+				        if (!strcmp(buf,"original"))
+				           missionindex = nummissions - 1;
+				   
 	                                if (nummissions >= MAXMISSIONS) break;
                                 }
 	                }
