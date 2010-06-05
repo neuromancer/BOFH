@@ -5,7 +5,7 @@
 CC = cc
 CFLAGS = -O3 -Wall
 LIBS = `sdl-config --libs`
-PREFIX = ../linux/
+PREFIX = ../
 
 all_cflags = $(CFLAGS) `sdl-config --cflags`
 objs = bme.o bme_gfx.o bme_io.o bme_win.o bme_kbd.o bme_mou.o		\

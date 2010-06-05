@@ -1,7 +1,7 @@
 CC = gcc -pthread
 CFLAGS = -Wall `sdl-config --cflags`
-BMECONV = ../bme/linux/bmeconv
-LIBS = -L../bme/linux -lbme `sdl-config --libs`
+BMECONV = ../bme/bmeconv
+LIBS = -L../bme -lbme `sdl-config --libs`
 
 all: ../missions/original.blk ../missions/test.blk ../data/bofh.pal	\
 ../data/splash.pal ../data/splash.raw ../data/title.spr			\
