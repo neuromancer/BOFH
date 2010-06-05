@@ -1,0 +1,81 @@
+BME_1.3 {
+  global:
+    # <bme_main.h> variables
+      bme_error;
+    # <bme_snd.h> functions
+      snd_init; snd_uninit; snd_setcustommixer;
+      snd_allocsample; snd_freesample;
+      snd_playsample; snd_ipcorrect; snd_stopsample;
+      snd_preventdistortion;
+      snd_setmastervolume; snd_setmusicmastervolume; snd_setsfxmastervolume;
+      snd_loadrawsample; snd_loadwav;
+      snd_loadxm; snd_freexm; snd_playxm; snd_stopxm;
+      snd_getxmpos; snd_getxmline; snd_getxmtick;
+      snd_getxmchannels; snd_getxmname;
+      snd_loadmod; snd_freemod; snd_playmod; snd_stopmod;
+      snd_getmodpos; snd_getmodline; snd_getmodtick;
+      snd_getmodchannels; snd_getmodname;
+      snd_loads3m; snd_frees3m; snd_plays3m; snd_stops3m;
+      snd_gets3mpos; snd_gets3mline; snd_gets3mtick;
+      snd_gets3mchannels; snd_gets3mname;
+    # <bme_snd.h> variables
+      snd_player; snd_channel; snd_sndinitted;
+      snd_bpmtempo; snd_bpmcount;
+      snd_channels; snd_buffers;
+      snd_mixmode; snd_mixrate;
+    # <bme_gfx.h> functions
+      gfx_init; gfx_reinit; gfx_uninit;
+      gfx_updatepage; gfx_blitwindow; gfx_wipepages;
+      gfx_setclipregion; gfx_setmaxspritefiles; gfx_setmaxcolors;
+      gfx_loadpalette; gfx_calcpalette; gfx_setpalette;
+      gfx_loadblocks; gfx_loadsprites; gfx_freesprites;
+      gfx_drawblock; gfx_drawsprite; gfx_drawspritec; gfx_drawspritex;
+      gfx_getspriteinfo; gfx_fillscreen; gfx_plot; gfx_line;
+    # <bme_gfx.h> variables
+      gfx_initted; gfx_scanlinemode; gfx_preventswitch; gfx_fullscreen;
+      gfx_windowxsize; gfx_windowysize; gfx_virtualxsize; gfx_virtualysize;
+      gfx_nblocks; gfx_blockxsize; gfx_blockysize;
+      spr_xsize; spr_ysize; spr_xhotspot; spr_yhotspot;
+      gfx_vscreen; gfx_blocks; gfx_palette; gfx_blockheaders;
+    # <bme_win.h> functions
+      win_openwindow; win_closewindow;
+      win_messagebox; win_checkmessages;
+      win_getspeed; win_setmousemode;
+    # <bme_win.h> variables
+      win_windowinitted; win_quitted; win_fullscreen;
+      win_keytable; win_keystate; win_asciikey; win_virtualkey;
+      win_mousexpos; win_mouseypos; win_mousexrel; win_mouseyrel;
+      win_mousebuttons; win_mousemode;
+      joy; joyx; joyy; joybuttons;
+    # <bme_kbd.h> functions
+      kbd_init; kbd_uninit;
+      kbd_waitkey; kbd_getkey; kbd_checkkey;
+      kbd_getascii; kbd_getvirtualkey; kbd_getkeyname;
+    # <bme_mou.h> functions
+      mou_init; mou_uninit;
+      mou_getpos; mou_getmove; mou_getbuttons;
+    # <bme_joy.h> functions
+      joy_detect; joy_getstatus;
+    # <bme_map.h> functions
+      map_freemap; map_loadmap; map_drawalllayers; map_drawlayer;
+      map_loadblockinfo; map_getblocknum; map_setblocknum; map_getblockinfo;
+      map_shiftblocksback; map_shiftblocksforward;
+    # <bme_map.h> variables
+      map_header; map_layer; map_layerdataptr; map_blkinfdata;
+    # <bme_txt.h> functions
+      txt_print; txt_printcenter; txt_printx; txt_printcenterx;
+    # <bme_txt.h> variables
+      txt_lastx; txt_lasty; txt_spacing;
+    # <bme_io.h> functions
+      io_open; io_lseek; io_read; io_close;
+      io_opendatafile; io_openlinkeddatafile; io_setfilemode;
+      io_read8; io_readle16; io_readle32; io_readhe16; io_readhe32;
+  local:
+    # <bme_tab.h> variables
+      retrigaddtable; retrigmultable;
+      vibratotable; vibratotypetable;
+    # automatic
+      _init; _fini;
+      _DYNAMIC; _PROCEDURE_LINKAGE_TABLE_; _GLOBAL_OFFSET_TABLE_;
+      __bss_start; _edata; _end;
+};
