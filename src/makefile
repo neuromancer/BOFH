@@ -1,7 +1,7 @@
 CC = gcc -pthread
 CFLAGS = -Wall `sdl-config --cflags`
-BMECONV = bmeconv
-LIBS = -lbme `sdl-config --libs`
+BMECONV = ../bme/linux/bmeconv
+LIBS = -L../bme/linux -lbme `sdl-config --libs`
 
 all: ../missions/original.blk ../missions/test.blk ../data/bofh.pal	\
 ../data/splash.pal ../data/splash.raw ../data/title.spr			\
@@ -42,6 +42,6 @@ all: ../missions/original.blk ../missions/test.blk ../data/bofh.pal	\
 
 clean:
 	rm -f ../bofh ../bofhedit *.o 
-#	rm -f ../missions/original.blk ../missions/test.blk
-#	rm -f ../data/*.pal ../data/*.raw ../data/*.spr
+	rm -f ../missions/original.blk ../missions/test.blk
+	rm -f ../data/*.pal ../data/*.raw ../data/*.spr
 .PHONY: clean
