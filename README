@@ -2,7 +2,7 @@ This is my modification of the original game "BOFH: Servers Under Siege".
 I just changed the keys (ctrl=shoot) and other minor things.
 I advise to play the game in 'insane' because it's challenging.
 
-I dont know if the original game license is GPL-compatible, I think it is.
-More information in bofh.txt.
+The author confirmed that the game content & code are licensed under
+the 3-clause BSD license. My modifications are in the same license.
 
 Original webpage: http://covertbitops.c64.org/
