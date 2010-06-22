@@ -1167,7 +1167,6 @@ void playercontrol(ACTOR *aptr)
         int want_turn = 0;      /* CCW<0<CW */
         int want_strafe = 0;    /* left<0<right */
 
-        want_walk -= avgmovey * 8;
         if (win_keytable[KEY_UP]    || win_keytable[KEY_KP8] || win_keytable[KEY_KP5]) want_walk += 16;
         if (win_keytable[KEY_DOWN]  || win_keytable[KEY_KP2]) want_walk -= 16;
         if (win_keytable[KEY_LEFT]  || win_keytable[KEY_KP4]) want_turn -= 16;
@@ -1257,7 +1256,8 @@ void playercontrol(ACTOR *aptr)
 	}
 
 	aptr->angle += aptr->angularspeed;
-	aptr->angle += avgmovex/2;
+	aptr->angle += (sintable[aptr->angle    ] * avgmovey/2 / 64 +
+			sintable[aptr->angle+COS] * avgmovex/2 / 64);
 	aptr->angle &= 0x3ff;
 	{
 		int speed = squareroot(aptr->speedx * aptr->speedx +
