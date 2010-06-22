@@ -114,6 +114,7 @@ HISCORE_ENTRY hiscore[] = {{"BURZUM", 10000},
 			     {"TROLL", 2000},
                              {"ENSLAVED", 1000}};
 
+char *menutext[] = {"START GAME", "OPTIONS", "HIGHSCORE", "INTRO", "EXIT"};
 char *difftext[] = {"PRACTICE", "EASY", "MEDIUM", "HARD", "INSANE"};
 SAMPLE *smp[MAX_SMP];
 char *samplename[] = {
@@ -357,6 +358,7 @@ void titlescreen(void)
         int phasetime = 0;
         int phasevar = 0;
         int c;
+	int menuselection = 0;
 
         gfx_loadpalette(DIR_DATA "/bofh.pal");
         gfx_setpalette();
@@ -383,17 +385,11 @@ void titlescreen(void)
 			((mouseb & MOUSEB_LEFT) && (!(prevmouseb & MOUSEB_LEFT))))
 		{
 			playfx(FXCHAN_ENEMYSHOOT, SMP_SHOTGUN, 22050, 64, 128);
-			if (selectdifficulty())
-			{
-                                score = 0;
-				game(missionlist[missionindex]);
-				if (checkhiscore()) phase = TITLE_HISCORE;
-				else phase = TITLE_PRESENTS;
-			}
-                        else
-                        {
-				phase = TITLE_PRESENTS;
-			}
+			menuselection = menu();
+			if (menuselection == 0) return;
+			if (menuselection == 1) phase = TITLE_HISCORE; 
+			if (menuselection == 2) phase = TITLE_PRESENTS;
+			
 			phasetime = 0;
 			phasevar = 0;
 		}
@@ -578,6 +574,102 @@ void saveconfig(void)
 	fclose(handle);
 }
 
+int menu(void)
+{
+	int move = 0;
+	int menuoption = 0;
+	char flash = 0;
+	int c;
+
+	kbd_getascii();
+	getgamespeed();
+	updatemouse();
+	for (;;)
+	{
+		getgamespeed();
+		updatemouse();
+		key = kbd_getkey();
+
+		checkglobalkeys();
+		if (key == KEY_ESC)
+		{
+			playfx(FXCHAN_ENEMYSHOOT, SMP_SHOTGUN, 22050, 64, 128);
+			return 2;
+		}
+		if ((key == KEY_SPACE) || (key == KEY_ENTER) ||
+				((mouseb & MOUSEB_LEFT) && (!(prevmouseb & MOUSEB_LEFT))))
+		{
+			playfx(FXCHAN_ENEMYSHOOT, SMP_SHOTGUN, 22050, 64, 128);
+			if (menuoption == 0)
+			{
+				if (selectdifficulty())
+				{
+					for (;;)
+					{
+					score = 0;
+					game(missionlist[missionindex]);
+					if (((checkhiscore() == 1) && (restartdialog()))
+							|| (restartdialog())) return 1;
+					}
+				}    
+			}
+			if (menuoption == 1) return 2;
+			if (menuoption == 2) return 1;
+			if (menuoption == 3) return 2;
+			if (menuoption == 4) return 0;
+		}
+		if (key == KEY_UP) move -= 64;
+		if (key == KEY_DOWN) move += 64;
+
+		move += mousemovey;
+		while ((move >= 5*64) || (move < 0))
+		{
+			if (move >= 5*64) move -= 5*64;
+			if (move < 0) move += 5*64;
+		}
+
+		menuoption = move / 64;
+
+		for (; gamespeed; gamespeed--)
+		{
+			flash++;
+		}
+
+		fireeffect();
+		for (c = 0; c < 5; c++)
+		{
+			if (((c == menuoption) && (flash & 16)) || (c != menuoption))
+			{
+				txt_printcenter(50+20*c, SPR_FONTS, menutext[c]);
+			}
+		}
+		gfx_updatepage();
+	}
+}
+
+int restartdialog(void)
+{
+	kbd_getascii();
+	getgamespeed();
+	updatemouse(); 
+	for (;;)
+	{
+          	getgamespeed();
+		updatemouse();
+		key = kbd_getkey();
+
+		checkglobalkeys();
+		if ((key == KEY_N) || (key == KEY_ESC))  return 1;
+	       
+		if ((key == KEY_SPACE) || (key == KEY_ENTER) ||
+				((mouseb & MOUSEB_LEFT) && (!(prevmouseb & MOUSEB_LEFT)))) return 0;
+
+                fireeffect();
+ 		txt_printcenter(80, SPR_FONTS, "RESTART? Y/N");
+		gfx_updatepage();
+	}
+}
+
 int selectdifficulty(void)
 {
         int move = difficulty * 64 + 32;
@@ -666,13 +758,13 @@ int selectdifficulty(void)
 		if (key == KEY_LEFT) missionindex--;
 		if (key == KEY_RIGHT) missionindex++;
 
-		move += mousemovey;
+                move += mousemovey;
 		while ((move >= 5*64) || (move < 0))
 		{
 			if (move >= 5*64) move -= 5*64;
 			if (move < 0) move += 5*64;
 		}
-                movex += mousemovex;
+		movex += mousemovex;
                 if (movex > 64)
                 {
                         movex = 0;
@@ -870,7 +962,7 @@ void game(char *missionname)
 		}
 
 		if (kbd_checkkey(KEY_P)) paused ^= 1;
-		if (kbd_checkkey(KEY_S)) sightline ^= 1;
+		if (kbd_checkkey(KEY_R)) sightline ^= 1;
   	        checkglobalkeys();
                 if (!paused)
                 {

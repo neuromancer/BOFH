@@ -403,6 +403,8 @@ void savehiscore(void);
 void loadconfig(void);
 void saveconfig(void);
 int initstuff(void);
+int menu(void);
+int restartdialog(void);
 int selectdifficulty(void);
 void showsplash(void);
 void testvictory(void);
