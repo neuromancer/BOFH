@@ -119,9 +119,9 @@ char *menutext[] = {"START GAME", "OPTIONS", "HIGHSCORE", "INTRO", "EXIT"};
 char *difftext[] = {"PRACTICE", "EASY", "MEDIUM", "HARD", "INSANE"};
 char *keytext[] = {
 	"MOVE FWD", "MOVE BWD", "TURN LEFT", "TURN RIGHT", "STRAFE LEFT",
-	"STRAFE RIGHT", "STRAFE KEY", "WALK", "ATTACK", "CHANGE WEAPON",
-	"PAUSE", "SIGHT LINE", "TOGGLE MUSIC", "VIEW NOTES", "CUT RED",
-	"CUT GREEN", "CUT BLUE", "CUT YELLOW"
+	"STRAFE RIGHT", "STRAFE KEY", "WALK KEY", "ATTACK", "CHANGE WEAPON",
+	"PAUSE KEY", "TOGGLE SIGHT LINE", "TOGGLE MUSIC", "VIEW NOTES", "CUT RED",
+	"CUT GREEN", "CUT BLUE", "CUT YELLOW", "MOUSE ATTACK", "MOUSE CHANGE WEAPON"
 };
 SAMPLE *smp[MAX_SMP];
 char *samplename[] = {
@@ -584,7 +584,10 @@ void loadconfig(void)
         fread(&redkey,      sizeof redkey,      1, handle);
         fread(&greenkey,    sizeof greenkey,    1, handle);
         fread(&bluekey,     sizeof bluekey,     1, handle);
-        fread(&yellowkey,   sizeof yellowkey,   1, handle); 
+        fread(&yellowkey,   sizeof yellowkey,   1, handle);
+	fread(&mouseattack, sizeof mouseattack, 1, handle);
+	fread(&mousechangewep, sizeof mousechangewep, 1, handle);
+	fread(&mousesens,   sizeof mousesens,   1, handle);
 	fclose(handle);
 }
 
@@ -600,7 +603,7 @@ void saveconfig(void)
         fwrite(&downkey,     sizeof downkey,     1, handle);
         fwrite(&leftkey,     sizeof leftkey,     1, handle);
         fwrite(&rightkey,    sizeof rightkey,    1, handle);
-        fwrite(&strafeleft,  sizeof strafeleft,  1, handle),
+        fwrite(&strafeleft,  sizeof strafeleft,  1, handle);
         fwrite(&straferight, sizeof straferight, 1, handle);
         fwrite(&strafekey,   sizeof strafekey,   1, handle);
         fwrite(&walkkey,     sizeof walkkey,     1, handle);
@@ -614,6 +617,9 @@ void saveconfig(void)
         fwrite(&greenkey,    sizeof greenkey,    1, handle);
         fwrite(&bluekey,     sizeof bluekey,     1, handle);
         fwrite(&yellowkey,   sizeof yellowkey,   1, handle);
+ 	fwrite(&mouseattack, sizeof mouseattack, 1, handle);
+	fwrite(&mousechangewep, sizeof mousechangewep, 1, handle);
+	fwrite(&mousesens,   sizeof mousesens,   1, handle);
 	fclose(handle);
 }
 
@@ -852,6 +858,7 @@ int optionsmenu(void)
 	int move = 0;
 	int keyselect = 0;
 	int keycode;
+        unsigned buttoncode;
 	char flash = 0;
 	int c;
 
@@ -874,38 +881,52 @@ int optionsmenu(void)
 				((mouseb & MOUSEB_LEFT) && (!(prevmouseb & MOUSEB_LEFT))))
 		{
 			playfx(FXCHAN_ENEMYSHOOT, SMP_SHOTGUN, 22050, 64, 128);
-			keycode = keydialog();
-			if (keycode != 0)
+			if (keyselect > 17)
 			{
-				if (keyselect == 0) upkey = keycode;
-				if (keyselect == 1) downkey = keycode;
-				if (keyselect == 2) leftkey = keycode;
-				if (keyselect == 3) rightkey = keycode;
-				if (keyselect == 4) strafeleft = keycode;
-				if (keyselect == 5) straferight = keycode;
-				if (keyselect == 6) strafekey = keycode;
-				if (keyselect == 7) walkkey = keycode;
-				if (keyselect == 8) attackkey = keycode;
-				if (keyselect == 9) changewep = keycode;
-				if (keyselect == 10) pausekey = keycode;
-				if (keyselect == 11) linekey = keycode;
-				if (keyselect == 12) musickey = keycode;
-				if (keyselect == 13) noteskey = keycode;
-				if (keyselect == 14) redkey = keycode;
-				if (keyselect == 15) greenkey = keycode;
-				if (keyselect == 16) bluekey = keycode;
-				if (keyselect == 17) yellowkey = keycode;
+				buttoncode = buttondialog();
+				if (keyselect == 18) mouseattack = buttoncode;
+				if (keyselect == 19) mousechangewep = buttoncode;
+			}
+			else
+			{
+				keycode = keydialog();
+				if (keycode != 0)
+				{
+					if (keyselect == 0) upkey = keycode;
+					if (keyselect == 1) downkey = keycode;
+					if (keyselect == 2) leftkey = keycode;
+					if (keyselect == 3) rightkey = keycode;
+					if (keyselect == 4) strafeleft = keycode;
+					if (keyselect == 5) straferight = keycode;
+					if (keyselect == 6) strafekey = keycode;
+					if (keyselect == 7) walkkey = keycode;
+					if (keyselect == 8) attackkey = keycode;
+					if (keyselect == 9) changewep = keycode;
+					if (keyselect == 10) pausekey = keycode;
+					if (keyselect == 11) linekey = keycode;
+					if (keyselect == 12) musickey = keycode;
+					if (keyselect == 13) noteskey = keycode;
+					if (keyselect == 14) redkey = keycode;
+					if (keyselect == 15) greenkey = keycode;
+					if (keyselect == 16) bluekey = keycode;
+					if (keyselect == 17) yellowkey = keycode;
+				}
 			}
 		}
 		if (key == KEY_UP) move -= 64;
 		if (key == KEY_DOWN) move += 64;
+		if (key == KEY_LEFT) mousesens += 1;
+		if (key == KEY_RIGHT) mousesens -=1;
 
 		move += mousemovey;
-		while ((move >= 18*64) || (move < 0))
+		while ((move >= 20*64) || (move < 0))
 		{
-			if (move >= 18*64) move -= 18*64;
-			if (move < 0) move += 18*64;
+			if (move >= 20*64) move -= 20*64;
+			if (move < 0) move += 20*64;
 		}
+
+		if (mousesens > 99) mousesens = 99;
+		if (mousesens < 1) mousesens = 1;
 
 		keyselect = move / 64;
 
@@ -915,14 +936,20 @@ int optionsmenu(void)
 		}
 
 		fireeffect();
-		for (c = 0; c < 18; c++)
+		for (c = 0; c < 20; c++)
 		{
 			if (((c == keyselect) && (flash & 16)) || (c != keyselect))
 			{
-				if (c < 10) txt_print(30, 20*c, SPR_FONTS, keytext[c]);
-				else txt_print(190, 20*(c-10), SPR_FONTS, keytext[c]);
+				if (c < 18) txt_print(10, (10*c)+10, SPR_SMALLFONTS, keytext[c]);
+				else txt_print(190, 10*(c-15), SPR_SMALLFONTS, keytext[c]);
 			}
 		}
+		txt_print(190, 10, SPR_SMALLFONTS, "MOUSE SENSITIVITY:");
+                sprintf(textbuf, "%d", -(mousesens - 100)); 
+		txt_print(230, 20, SPR_SMALLFONTS, textbuf);
+		txt_print(145, 170, SPR_SMALLFONTS, "USE UP & DOWN TO NAVIGATE");
+		txt_print(145, 180, SPR_SMALLFONTS, "LEFT & RIGHT TO CHANGE MOUSE SENS");
+		txt_print(145, 190, SPR_SMALLFONTS, "ENTER TO SELECT AND ESC TO EXIT");
 		gfx_updatepage();
 	}
 }
@@ -931,23 +958,36 @@ int keydialog(void)
 {
 	kbd_getascii();
 	getgamespeed();
+	for (;;)
+	{
+          	getgamespeed();
+		key = kbd_getkey();
+		checkglobalkeys();
+		if (key == KEY_ESC)  return 0;
+		if (key != 0) return key;
+
+                fireeffect();
+ 		txt_printcenter(80, SPR_FONTS, "TYPE KEY TO BIND, ESC TO CANCEL");
+		gfx_updatepage();
+	}
+}
+
+int buttondialog(void)
+{
+	kbd_getascii();
+	getgamespeed();
 	updatemouse(); 
 	for (;;)
 	{
           	getgamespeed();
-		updatemouse();
 		key = kbd_getkey();
-
+                updatemouse();
 		checkglobalkeys();
-		if ((key == KEY_N) || (key == KEY_ESC))  return 0;
-	       
-		if (key != 0)
-		{
-			return key;
-		}
+		if (key == KEY_ESC)  return 0;
+		if (mouseb != prevmouseb) return mouseb;
 
                 fireeffect();
- 		txt_printcenter(80, SPR_FONTS, "TYPE KEY TO BIND, ESC TO CANCEL");
+ 		txt_printcenter(80, SPR_FONTS, "PRESS BUTTON TO BIND, ESC TO CANCEL");
 		gfx_updatepage();
 	}
 } 

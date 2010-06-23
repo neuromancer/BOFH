@@ -36,6 +36,9 @@ int redkey = KEY_R;
 int greenkey = KEY_G;
 int bluekey = KEY_B;
 int yellowkey = KEY_Y;
+unsigned mouseattack = MOUSEB_LEFT;
+unsigned mousechangewep = MOUSEB_RIGHT;
+int mousesens = 64;
 
 void makecollareas(void)
 {
@@ -1278,8 +1281,8 @@ void playercontrol(ACTOR *aptr)
 	}
 
 	aptr->angle += aptr->angularspeed;
-	aptr->angle += (sintable[aptr->angle    ] * avgmovey/2 / 64 +
-			sintable[aptr->angle+COS] * avgmovex/2 / 64);
+	aptr->angle += (sintable[aptr->angle    ] * avgmovey/2 / mousesens +
+			sintable[aptr->angle+COS] * avgmovex/2 / mousesens);
 	aptr->angle &= 0x3ff;
 	{
 		int speed = squareroot(aptr->speedx * aptr->speedx +
@@ -1300,7 +1303,7 @@ void playerattack(ACTOR *aptr)
           aptr->attackdelay--;
         } else {
           if ((kbd_checkkey(changewep))
-              || ((mouseb & MOUSEB_RIGHT) && (!(prevmouseb & MOUSEB_RIGHT))))
+              || ((mouseb & mousechangewep) && (!(prevmouseb & mousechangewep))))
           {
                   int oldweapon = weapon;
                   aptr->attack = 0;
@@ -1356,7 +1359,7 @@ void playerattack(ACTOR *aptr)
         }
 
         /* Check for initiating attack */
-        if ((!aptr->attackdelay) && ((win_keytable[attackkey]) || (mouseb & MOUSEB_LEFT)) && ammo[weapon]) // ***
+        if ((!aptr->attackdelay) && ((win_keytable[attackkey]) || (mouseb & mouseattack)) && ammo[weapon]) // ***
 	{
 		switch(weapon)
 		{

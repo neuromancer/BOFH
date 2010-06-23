@@ -20,3 +20,6 @@ int redkey;
 int greenkey;
 int bluekey;
 int yellowkey;
+unsigned mouseattack;
+unsigned mousechangewep;
+int mousesens;

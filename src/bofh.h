@@ -408,6 +408,7 @@ int restartdialog(void);
 int selectdifficulty(void);
 int optionsmenu(void);
 int keydialog(void);
+int buttondialog(void);
 void showsplash(void);
 void testvictory(void);
 void endpart(void);
