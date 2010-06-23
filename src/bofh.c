@@ -10,6 +10,7 @@
 #include "bofh.h"
 #include "extern.h"
 #include "sincos.h"
+#include "keybinds.h"
 
 ACTOR actor[MAX_ACTOR];
 BOMB bomb[MAX_BOMB];
@@ -116,6 +117,12 @@ HISCORE_ENTRY hiscore[] = {{"BURZUM", 10000},
 
 char *menutext[] = {"START GAME", "OPTIONS", "HIGHSCORE", "INTRO", "EXIT"};
 char *difftext[] = {"PRACTICE", "EASY", "MEDIUM", "HARD", "INSANE"};
+char *keytext[] = {
+	"MOVE FWD", "MOVE BWD", "TURN LEFT", "TURN RIGHT", "STRAFE LEFT",
+	"STRAFE RIGHT", "STRAFE KEY", "WALK", "ATTACK", "CHANGE WEAPON",
+	"PAUSE", "SIGHT LINE", "TOGGLE MUSIC", "VIEW NOTES", "CUT RED",
+	"CUT GREEN", "CUT BLUE", "CUT YELLOW"
+};
 SAMPLE *smp[MAX_SMP];
 char *samplename[] = {
         "taunt1.smp","taunt2.smp","taunt3.smp","taunt4.smp","taunt5.smp","taunt6.smp",
@@ -295,7 +302,7 @@ void showsplash(void)
 
 void checkglobalkeys(void)
 {
-        if (key == KEY_M)
+        if (key == musickey)
         {
               	musicvolume ^= 64;
 	       	snd_setmusicmastervolume(FIRSTFXCHAN, musicvolume);
@@ -560,6 +567,24 @@ void loadconfig(void)
 	fread(&screenmode, sizeof screenmode, 1, handle);
 	fread(&win_fullscreen, sizeof win_fullscreen, 1, handle);
 	fread(&directsound, sizeof directsound, 1, handle);
+	fread(&upkey,       sizeof upkey,       1, handle);
+        fread(&downkey,     sizeof downkey,     1, handle);
+        fread(&leftkey,     sizeof leftkey,     1, handle);
+        fread(&rightkey,    sizeof rightkey,    1, handle);
+        fread(&strafeleft,  sizeof strafeleft,  1, handle);
+        fread(&straferight, sizeof straferight,  1, handle);
+        fread(&strafekey,   sizeof strafekey,   1, handle);
+        fread(&walkkey,     sizeof walkkey,     1, handle);
+        fread(&attackkey,   sizeof attackkey,   1, handle);
+        fread(&changewep,   sizeof changewep,   1, handle);
+        fread(&pausekey,    sizeof pausekey,    1, handle);
+        fread(&linekey,     sizeof linekey,     1, handle);
+        fread(&musickey,    sizeof musickey,    1, handle);
+        fread(&noteskey,    sizeof noteskey,    1, handle);
+        fread(&redkey,      sizeof redkey,      1, handle);
+        fread(&greenkey,    sizeof greenkey,    1, handle);
+        fread(&bluekey,     sizeof bluekey,     1, handle);
+        fread(&yellowkey,   sizeof yellowkey,   1, handle); 
 	fclose(handle);
 }
 
@@ -571,6 +596,24 @@ void saveconfig(void)
 	fwrite(&screenmode, sizeof screenmode, 1, handle);
 	fwrite(&win_fullscreen, sizeof win_fullscreen, 1, handle);
 	fwrite(&directsound, sizeof directsound, 1, handle);
+	fwrite(&upkey,       sizeof upkey,       1, handle);
+        fwrite(&downkey,     sizeof downkey,     1, handle);
+        fwrite(&leftkey,     sizeof leftkey,     1, handle);
+        fwrite(&rightkey,    sizeof rightkey,    1, handle);
+        fwrite(&strafeleft,  sizeof strafeleft,  1, handle),
+        fwrite(&straferight, sizeof straferight, 1, handle);
+        fwrite(&strafekey,   sizeof strafekey,   1, handle);
+        fwrite(&walkkey,     sizeof walkkey,     1, handle);
+        fwrite(&attackkey,   sizeof attackkey,   1, handle);
+        fwrite(&changewep,   sizeof changewep,   1, handle);
+        fwrite(&pausekey,    sizeof pausekey,    1, handle);
+        fwrite(&linekey,     sizeof linekey,     1, handle);
+        fwrite(&musickey,    sizeof musickey,    1, handle);
+        fwrite(&noteskey,    sizeof noteskey,    1, handle);
+        fwrite(&redkey,      sizeof redkey,      1, handle);
+        fwrite(&greenkey,    sizeof greenkey,    1, handle);
+        fwrite(&bluekey,     sizeof bluekey,     1, handle);
+        fwrite(&yellowkey,   sizeof yellowkey,   1, handle);
 	fclose(handle);
 }
 
@@ -613,7 +656,7 @@ int menu(void)
 					}
 				}    
 			}
-			if (menuoption == 1) return 2;
+			if (menuoption == 1) optionsmenu();
 			if (menuoption == 2) return 1;
 			if (menuoption == 3) return 2;
 			if (menuoption == 4) return 0;
@@ -661,8 +704,7 @@ int restartdialog(void)
 		checkglobalkeys();
 		if ((key == KEY_N) || (key == KEY_ESC))  return 1;
 	       
-		if ((key == KEY_SPACE) || (key == KEY_ENTER) ||
-				((mouseb & MOUSEB_LEFT) && (!(prevmouseb & MOUSEB_LEFT)))) return 0;
+		if (key != 0) return 0;
 
                 fireeffect();
  		txt_printcenter(80, SPR_FONTS, "RESTART? Y/N");
@@ -805,6 +847,111 @@ int selectdifficulty(void)
 	}
 }
 
+int optionsmenu(void)
+{
+	int move = 0;
+	int keyselect = 0;
+	int keycode;
+	char flash = 0;
+	int c;
+
+	kbd_getascii();
+	getgamespeed();
+	updatemouse();
+	for (;;)
+	{
+		getgamespeed();
+		updatemouse();
+		key = kbd_getkey();
+
+		checkglobalkeys();
+		if (key == KEY_ESC)
+		{
+			playfx(FXCHAN_ENEMYSHOOT, SMP_SHOTGUN, 22050, 64, 128);
+			return 0;
+		}
+		if ((key == KEY_SPACE) || (key == KEY_ENTER) ||
+				((mouseb & MOUSEB_LEFT) && (!(prevmouseb & MOUSEB_LEFT))))
+		{
+			playfx(FXCHAN_ENEMYSHOOT, SMP_SHOTGUN, 22050, 64, 128);
+			keycode = keydialog();
+			if (keycode != 0)
+			{
+				if (keyselect == 0) upkey = keycode;
+				if (keyselect == 1) downkey = keycode;
+				if (keyselect == 2) leftkey = keycode;
+				if (keyselect == 3) rightkey = keycode;
+				if (keyselect == 4) strafeleft = keycode;
+				if (keyselect == 5) straferight = keycode;
+				if (keyselect == 6) strafekey = keycode;
+				if (keyselect == 7) walkkey = keycode;
+				if (keyselect == 8) attackkey = keycode;
+				if (keyselect == 9) changewep = keycode;
+				if (keyselect == 10) pausekey = keycode;
+				if (keyselect == 11) linekey = keycode;
+				if (keyselect == 12) musickey = keycode;
+				if (keyselect == 13) noteskey = keycode;
+				if (keyselect == 14) redkey = keycode;
+				if (keyselect == 15) greenkey = keycode;
+				if (keyselect == 16) bluekey = keycode;
+				if (keyselect == 17) yellowkey = keycode;
+			}
+		}
+		if (key == KEY_UP) move -= 64;
+		if (key == KEY_DOWN) move += 64;
+
+		move += mousemovey;
+		while ((move >= 18*64) || (move < 0))
+		{
+			if (move >= 18*64) move -= 18*64;
+			if (move < 0) move += 18*64;
+		}
+
+		keyselect = move / 64;
+
+		for (; gamespeed; gamespeed--)
+		{
+			flash++;
+		}
+
+		fireeffect();
+		for (c = 0; c < 18; c++)
+		{
+			if (((c == keyselect) && (flash & 16)) || (c != keyselect))
+			{
+				if (c < 10) txt_print(30, 20*c, SPR_FONTS, keytext[c]);
+				else txt_print(190, 20*(c-10), SPR_FONTS, keytext[c]);
+			}
+		}
+		gfx_updatepage();
+	}
+}
+
+int keydialog(void)
+{
+	kbd_getascii();
+	getgamespeed();
+	updatemouse(); 
+	for (;;)
+	{
+          	getgamespeed();
+		updatemouse();
+		key = kbd_getkey();
+
+		checkglobalkeys();
+		if ((key == KEY_N) || (key == KEY_ESC))  return 0;
+	       
+		if (key != 0)
+		{
+			return key;
+		}
+
+                fireeffect();
+ 		txt_printcenter(80, SPR_FONTS, "TYPE KEY TO BIND, ESC TO CANCEL");
+		gfx_updatepage();
+	}
+} 
+
 void game(char *missionname)
 {
         char mapnamebuf[80];
@@ -945,7 +1092,7 @@ void game(char *missionname)
 			return;
 		}
 
-		if (kbd_checkkey(KEY_V))
+		if (kbd_checkkey(noteskey))
 		{
                         int c = numbombs;
                         showinstrtime = 0;
@@ -961,8 +1108,8 @@ void game(char *missionname)
 			}
 		}
 
-		if (kbd_checkkey(KEY_P)) paused ^= 1;
-		if (kbd_checkkey(KEY_R)) sightline ^= 1;
+		if (kbd_checkkey(pausekey)) paused ^= 1;
+		if (kbd_checkkey(linekey)) sightline ^= 1;
   	        checkglobalkeys();
                 if (!paused)
                 {

@@ -1,6 +1,7 @@
 #include "bofh.h"
 #include "sincos.h"
 #include "extern.h"
+#include "keybinds.h"
 
 char *colorstring[] = {"RED", "GREEN", "BLUE", "YELLOW"};
 
@@ -121,10 +122,10 @@ void drawcloset(int num)
 		/* Cutting a wire */
                 if (wc < 4)
                 {
-	                if ((kbd_checkkey(KEY_R)) && (wt[WIRE_RED])) w = WIRE_RED;
-	                if ((kbd_checkkey(KEY_G)) && (wt[WIRE_GREEN])) w = WIRE_GREEN;
-	                if ((kbd_checkkey(KEY_B)) && (wt[WIRE_BLUE])) w = WIRE_BLUE;
-	                if ((kbd_checkkey(KEY_Y)) && (wt[WIRE_YELLOW])) w = WIRE_YELLOW;
+	                if ((kbd_checkkey(redkey)) && (wt[WIRE_RED])) w = WIRE_RED;
+	                if ((kbd_checkkey(greenkey)) && (wt[WIRE_GREEN])) w = WIRE_GREEN;
+	                if ((kbd_checkkey(bluekey)) && (wt[WIRE_BLUE])) w = WIRE_BLUE;
+	                if ((kbd_checkkey(yellowkey)) && (wt[WIRE_YELLOW])) w = WIRE_YELLOW;
 	                if (w != WIRE_NONE)
 	                {
 		                playfx(FXCHAN_KLONK, SMP_UZI, 30000, 32, 128);
@@ -194,7 +195,7 @@ void countdown(void)
                                	 	explx = (closet[bomb[bombnum].location].xb*16+(rand()&15))*DEC;
                                	 	exply = (closet[bomb[bombnum].location].yb*16+(rand()&15))*DEC;
                                	 	if (!(map_getblockinfo(0, explx/DEC, exply/DEC)|map_getblockinfo(1, explx/DEC, exply/DEC))
-                               	 		& (INF_OBSTACLE|INF_WALL)) break;
+                               	 		&& (INF_OBSTACLE|INF_WALL)) break;
                                	}
 
                                	/* Sound not always */

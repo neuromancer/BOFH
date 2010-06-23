@@ -1,6 +1,7 @@
 #include "bofh.h"
 #include "sincos.h"
 #include "extern.h"
+#include "keybinds.h"
 
 static void ensure_bnd_sound (enum bnd_sound bnds);
 static int takes_weapon(unsigned type, unsigned amnt);
@@ -14,6 +15,27 @@ int ca_size[COLLAREAS];
 int ca_start[COLLAREAS];
 int ca_temp[COLLAREAS];
 ACTOR *ca_list[MAX_ACTOR];
+
+/*Default keybindings */
+
+int upkey = KEY_UP;
+int downkey = KEY_DOWN;
+int leftkey = KEY_LEFT;
+int rightkey = KEY_RIGHT;
+int strafeleft = KEY_KP1;
+int straferight = KEY_KP3;
+int strafekey = KEY_ALT;
+int walkkey = KEY_LEFTSHIFT;
+int attackkey = KEY_SPACE;
+int changewep = KEY_ENTER;
+int pausekey = KEY_P;
+int linekey = KEY_S;
+int musickey = KEY_M;
+int noteskey = KEY_V;
+int redkey = KEY_R;
+int greenkey = KEY_G;
+int bluekey = KEY_B;
+int yellowkey = KEY_Y;
 
 void makecollareas(void)
 {
@@ -1167,17 +1189,17 @@ void playercontrol(ACTOR *aptr)
         int want_turn = 0;      /* CCW<0<CW */
         int want_strafe = 0;    /* left<0<right */
 
-        if (win_keytable[KEY_UP]    || win_keytable[KEY_KP8] || win_keytable[KEY_KP5]) want_walk += 16;
-        if (win_keytable[KEY_DOWN]  || win_keytable[KEY_KP2]) want_walk -= 16;
-        if (win_keytable[KEY_LEFT]  || win_keytable[KEY_KP4]) want_turn -= 16;
-        if (win_keytable[KEY_RIGHT] || win_keytable[KEY_KP6]) want_turn += 16;
-        if (win_keytable[KEY_END]   || win_keytable[KEY_KP1]) want_strafe -= 16;
-        if (win_keytable[KEY_PGDN]  || win_keytable[KEY_KP3]) want_strafe += 16;
-        if (win_keytable[KEY_ALT]) {      /* Strafe mode */
+        if (win_keytable[upkey]) want_walk += 16;
+        if (win_keytable[downkey]) want_walk -= 16;
+        if (win_keytable[leftkey]) want_turn -= 16;
+        if (win_keytable[rightkey]) want_turn += 16;
+        if (win_keytable[strafeleft]) want_strafe -= 16;
+        if (win_keytable[straferight]) want_strafe += 16;
+        if (win_keytable[strafekey]) {      /* Strafe mode */
                 want_strafe += want_turn;
                 want_turn = 0;
         }
-        if ((win_keytable[KEY_LEFTSHIFT])||(win_keytable[KEY_RIGHTSHIFT])) {    /* Slo-Mo */
+        if ((win_keytable[walkkey])) {    /* Slo-Mo */
                 want_walk   /= 2;
                 want_strafe /= 2;
         }
@@ -1277,7 +1299,7 @@ void playerattack(ACTOR *aptr)
         if (aptr->attackdelay) {
           aptr->attackdelay--;
         } else {
-          if ((kbd_checkkey(KEY_ENTER))
+          if ((kbd_checkkey(changewep))
               || ((mouseb & MOUSEB_RIGHT) && (!(prevmouseb & MOUSEB_RIGHT))))
           {
                   int oldweapon = weapon;
@@ -1334,7 +1356,7 @@ void playerattack(ACTOR *aptr)
         }
 
         /* Check for initiating attack */
-        if ((!aptr->attackdelay) && ((win_keytable[KEY_CTRL]) || (win_keytable[KEY_SPACE]) || (mouseb & MOUSEB_LEFT)) && ammo[weapon]) // ***
+        if ((!aptr->attackdelay) && ((win_keytable[attackkey]) || (mouseb & MOUSEB_LEFT)) && ammo[weapon]) // ***
 	{
 		switch(weapon)
 		{
