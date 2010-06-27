@@ -525,7 +525,7 @@ void mainloop(void)
     transparent ^= 1;
     if (mode < MODE_PARAMEDIT)
     {
-            gfx_fillscreen(0);
+            gfx_fillscreen(6); // replaced transparent with 6 as it caused flashing
             if (layervisible[0]) map_drawlayer(0,xpos,ypos,0,0,21,14);
             if (layervisible[1]) map_drawlayer(1,xpos,ypos,0,0,21,14);
     }

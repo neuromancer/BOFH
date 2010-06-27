@@ -1087,7 +1087,7 @@ void game(char *missionname)
 	        getgamespeed();
                 updatemouse();
 
-                if (kbd_checkkey(KEY_M))
+                if (kbd_checkkey(musickey))
                 {
                       	musicvolume ^= 64;
         	       	snd_setmusicmastervolume(FIRSTFXCHAN, musicvolume);
