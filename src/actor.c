@@ -27,7 +27,7 @@ int straferight = KEY_KP3;
 int strafekey = KEY_ALT;
 int walkkey = KEY_LEFTSHIFT;
 int attackkey = KEY_SPACE;
-int changewep = KEY_ENTER;
+int nextweap = KEY_ENTER;
 int pausekey = KEY_P;
 int linekey = KEY_S;
 int musickey = KEY_M;
@@ -37,7 +37,7 @@ int greenkey = KEY_G;
 int bluekey = KEY_B;
 int yellowkey = KEY_Y;
 unsigned mouseattack = MOUSEB_LEFT;
-unsigned mousechangewep = MOUSEB_RIGHT;
+unsigned mousenextweap = MOUSEB_RIGHT;
 int mousesens = 64;
 
 void makecollareas(void)
@@ -1302,14 +1302,26 @@ void playerattack(ACTOR *aptr)
         if (aptr->attackdelay) {
           aptr->attackdelay--;
         } else {
-          if ((kbd_checkkey(changewep))
-              || ((mouseb & mousechangewep) && (!(prevmouseb & mousechangewep))))
+          if ((kbd_checkkey(nextweap))
+              || ((mouseb & mousenextweap) && (!(prevmouseb & mousenextweap))))
           {
                   int oldweapon = weapon;
                   aptr->attack = 0;
                   do {
                           weapon++;
                           if (weapon >= WEAPNUM) weapon = WEAP_FISTS;
+                  } while (!ammo[weapon]);
+                  if (weapon != oldweapon) playfx(FXCHAN_FIST, SMP_FIST1, 22050, 48, 128);
+          }
+
+          if ((kbd_checkkey(prevweap))
+              || ((mouseb & mouseprevweap) && (!(prevmouseb & mouseprevweap))))
+          {
+                  int oldweapon = weapon;
+                  aptr->attack = 0;
+                  do {
+                          weapon--;
+                          if (weapon < 0) weapon = WEAP_SCANNER;
                   } while (!ammo[weapon]);
                   if (weapon != oldweapon) playfx(FXCHAN_FIST, SMP_FIST1, 22050, 48, 128);
           }

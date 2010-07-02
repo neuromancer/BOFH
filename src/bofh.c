@@ -119,9 +119,10 @@ char *menutext[] = {"START GAME", "OPTIONS", "HIGHSCORE", "INTRO", "EXIT"};
 char *difftext[] = {"PRACTICE", "EASY", "MEDIUM", "HARD", "INSANE"};
 char *keytext[] = {
 	"MOVE FWD", "MOVE BWD", "TURN LEFT", "TURN RIGHT", "STRAFE LEFT",
-	"STRAFE RIGHT", "STRAFE KEY", "WALK KEY", "ATTACK", "CHANGE WEAPON",
-	"PAUSE KEY", "TOGGLE SIGHT LINE", "TOGGLE MUSIC", "VIEW NOTES", "CUT RED",
-	"CUT GREEN", "CUT BLUE", "CUT YELLOW", "MOUSE ATTACK", "MOUSE CHANGE WEAPON"
+	"STRAFE RIGHT", "STRAFE KEY", "WALK KEY", "ATTACK", "NEXT WEAPON",
+	"PREV WEAPON", "PAUSE KEY", "TOGGLE SIGHT LINE", "TOGGLE MUSIC",
+	"VIEW NOTES", "CUT RED", "CUT GREEN", "CUT BLUE", "CUT YELLOW",
+	"MOUSE ATTACK",	"MOUSE NEXT WEAPON", "MOUSE PREV WEAPON"
 };
 SAMPLE *smp[MAX_SMP];
 char *samplename[] = {
@@ -576,7 +577,8 @@ void loadconfig(void)
         fread(&strafekey,   sizeof strafekey,   1, handle);
         fread(&walkkey,     sizeof walkkey,     1, handle);
         fread(&attackkey,   sizeof attackkey,   1, handle);
-        fread(&changewep,   sizeof changewep,   1, handle);
+        fread(&nextweap,   sizeof nextweap,   1, handle);
+	fread(&prevweap,   sizeof prevweap,     1, handle);
         fread(&pausekey,    sizeof pausekey,    1, handle);
         fread(&linekey,     sizeof linekey,     1, handle);
         fread(&musickey,    sizeof musickey,    1, handle);
@@ -586,7 +588,8 @@ void loadconfig(void)
         fread(&bluekey,     sizeof bluekey,     1, handle);
         fread(&yellowkey,   sizeof yellowkey,   1, handle);
 	fread(&mouseattack, sizeof mouseattack, 1, handle);
-	fread(&mousechangewep, sizeof mousechangewep, 1, handle);
+	fread(&mousenextweap, sizeof mousenextweap, 1, handle);
+	fread(&mousenextweap, sizeof mousenextweap, 1, handle);
 	fread(&mousesens,   sizeof mousesens,   1, handle);
 	fclose(handle);
 }
@@ -608,7 +611,8 @@ void saveconfig(void)
         fwrite(&strafekey,   sizeof strafekey,   1, handle);
         fwrite(&walkkey,     sizeof walkkey,     1, handle);
         fwrite(&attackkey,   sizeof attackkey,   1, handle);
-        fwrite(&changewep,   sizeof changewep,   1, handle);
+        fwrite(&nextweap,   sizeof nextweap,   1, handle);
+	fwrite(&prevweap,   sizeof prevweap,     1, handle);
         fwrite(&pausekey,    sizeof pausekey,    1, handle);
         fwrite(&linekey,     sizeof linekey,     1, handle);
         fwrite(&musickey,    sizeof musickey,    1, handle);
@@ -618,7 +622,8 @@ void saveconfig(void)
         fwrite(&bluekey,     sizeof bluekey,     1, handle);
         fwrite(&yellowkey,   sizeof yellowkey,   1, handle);
  	fwrite(&mouseattack, sizeof mouseattack, 1, handle);
-	fwrite(&mousechangewep, sizeof mousechangewep, 1, handle);
+	fwrite(&mousenextweap, sizeof mousenextweap, 1, handle);
+	fwrite(&mouseprevweap, sizeof mouseprevweap, 1, handle);
 	fwrite(&mousesens,   sizeof mousesens,   1, handle);
 	fclose(handle);
 }
@@ -881,11 +886,12 @@ int optionsmenu(void)
 				((mouseb & MOUSEB_LEFT) && (!(prevmouseb & MOUSEB_LEFT))))
 		{
 			playfx(FXCHAN_ENEMYSHOOT, SMP_SHOTGUN, 22050, 64, 128);
-			if (keyselect > 17)
+			if (keyselect > 18)
 			{
 				buttoncode = buttondialog();
-				if (keyselect == 18) mouseattack = buttoncode;
-				if (keyselect == 19) mousechangewep = buttoncode;
+				if (keyselect == 19) mouseattack = buttoncode;
+				if (keyselect == 20) mousenextweap = buttoncode;
+				if (keyselect == 21) mouseprevweap = buttoncode;
 			}
 			else
 			{
@@ -901,15 +907,16 @@ int optionsmenu(void)
 					if (keyselect == 6) strafekey = keycode;
 					if (keyselect == 7) walkkey = keycode;
 					if (keyselect == 8) attackkey = keycode;
-					if (keyselect == 9) changewep = keycode;
-					if (keyselect == 10) pausekey = keycode;
-					if (keyselect == 11) linekey = keycode;
-					if (keyselect == 12) musickey = keycode;
-					if (keyselect == 13) noteskey = keycode;
-					if (keyselect == 14) redkey = keycode;
-					if (keyselect == 15) greenkey = keycode;
-					if (keyselect == 16) bluekey = keycode;
-					if (keyselect == 17) yellowkey = keycode;
+					if (keyselect == 9) nextweap = keycode;
+					if (keyselect == 10) prevweap = keycode;
+					if (keyselect == 11) pausekey = keycode;
+					if (keyselect == 12) linekey = keycode;
+					if (keyselect == 13) musickey = keycode;
+					if (keyselect == 14) noteskey = keycode;
+					if (keyselect == 15) redkey = keycode;
+					if (keyselect == 16) greenkey = keycode;
+					if (keyselect == 17) bluekey = keycode;
+					if (keyselect == 18) yellowkey = keycode;
 				}
 			}
 		}
@@ -919,10 +926,10 @@ int optionsmenu(void)
 		if (key == KEY_RIGHT) mousesens -=1;
 
 		move += mousemovey;
-		while ((move >= 20*64) || (move < 0))
+		while ((move >= 22*64) || (move < 0))
 		{
-			if (move >= 20*64) move -= 20*64;
-			if (move < 0) move += 20*64;
+			if (move >= 22*64) move -= 22*64;
+			if (move < 0) move += 22*64;
 		}
 
 		if (mousesens > 99) mousesens = 99;
@@ -936,12 +943,12 @@ int optionsmenu(void)
 		}
 
 		fireeffect();
-		for (c = 0; c < 20; c++)
+		for (c = 0; c < 22; c++)
 		{
 			if (((c == keyselect) && (flash & 16)) || (c != keyselect))
 			{
-				if (c < 18) txt_print(10, (10*c)+10, SPR_SMALLFONTS, keytext[c]);
-				else txt_print(190, 10*(c-15), SPR_SMALLFONTS, keytext[c]);
+				if (c < 19) txt_print(10, (10*c)+10, SPR_SMALLFONTS, keytext[c]);
+				else txt_print(190, 10*(c-16), SPR_SMALLFONTS, keytext[c]);
 			}
 		}
 		txt_print(190, 10, SPR_SMALLFONTS, "MOUSE SENSITIVITY:");
