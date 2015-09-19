@@ -1,5 +1,5 @@
 CC = gcc -pthread
-CFLAGS = -Wall `sdl-config --cflags`
+CFLAGS = -g -Wall `sdl-config --cflags`
 BMECONV = ../bme/bmeconv
 LIBS = -L../bme -lbme -lm `sdl-config --libs`
 
