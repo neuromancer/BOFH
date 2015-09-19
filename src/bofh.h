@@ -35,6 +35,8 @@
 #define VB_COMPUTERS 8
 
 #define MAX_ACTOR 2048
+#define MAX_ACTOR_RESERVED 100
+#define MAX_ACTOR_FREEING 200
 #define MAX_SMP 64
 #define MAX_BOMB 64
 #define MAX_CLOSET 64

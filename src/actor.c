@@ -2550,6 +2550,8 @@ void movebullet(ACTOR *aptr)
                   // Ricochet!
                   int speed;
                   ACTOR *sptr = spawnactor(ACTOR_SMOKE, aptr->x, aptr->y, 0);
+                  if (!sptr) return;
+
                   sptr->frame = 0;
                   aptr->type = ACTOR_RICOCHET;
                   aptr->frame = 0;
@@ -2976,6 +2978,44 @@ ACTOR *spawnactor(int type, int x, int y, int angle)
 	int c;
 
 	if (!actors) actors = 1;
+
+	/*
+	 * Free the oldest actors remaining when firing a weapon.
+	 * Do that only if adding more of them because these aren't
+	 * accessed afterwards any more. We have to shift left all
+	 * other actors. If these would be still accessed at their
+	 * old location, then this would segfault. Also reserve
+	 * space for temporary actors.
+	 */
+	if (actors >= MAX_ACTOR - MAX_ACTOR_RESERVED &&
+	    (type == ACTOR_SHELL || type == ACTOR_SHOTGSHELL ||
+	     type == ACTOR_BAZOOKA_STRAP))
+	{
+		for (c = 0; c < actors - 1; c++)
+		{
+			switch (aptr->type)
+			{
+			case ACTOR_SHELL:
+			case ACTOR_SHOTGSHELL:
+			case ACTOR_BAZOOKA_STRAP:
+			case ACTOR_BAZOOKA_USED:
+				/*
+				 * Shift left all remaining actors and zero the
+				 * last one - might segfault if still accessed.
+				 */
+				memmove(aptr, aptr + 1,
+					(actors - c - 1) * sizeof(*aptr));
+				memset(aptr + actors - c - 1, 0, sizeof(*aptr));
+				actors--;
+				break;
+			default:
+				aptr++;
+				break;
+			}
+			if (actors <= MAX_ACTOR - MAX_ACTOR_FREEING)
+				break;
+		}
+	}
 
 	for (c = 0; c < actors; c++)
 	{
