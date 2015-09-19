@@ -2550,6 +2550,8 @@ void movebullet(ACTOR *aptr)
                   // Ricochet!
                   int speed;
                   ACTOR *sptr = spawnactor(ACTOR_SMOKE, aptr->x, aptr->y, 0);
+                  if (!sptr) return;
+
                   sptr->frame = 0;
                   aptr->type = ACTOR_RICOCHET;
                   aptr->frame = 0;
