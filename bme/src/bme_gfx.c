@@ -132,6 +132,11 @@ int gfx_init(unsigned xsize, unsigned ysize, unsigned framerate, unsigned flags)
     gfx_windowysize = gfx_virtualysize;
     if (gfx_scanlinemode)
     {
+        gfx_windowxsize <<= 2;
+        gfx_windowysize <<= 2;
+    }
+    else
+    {
         gfx_windowxsize <<= 1;
         gfx_windowysize <<= 1;
     }
@@ -466,31 +471,6 @@ void gfx_copyscreen8(Uint8  *destaddress, Uint8  *srcaddress, unsigned pitch)
         default:
         for (c = 0; c < gfx_virtualysize; c++)
         {
-            memcpy(destaddress, srcaddress, gfx_virtualxsize);
-            destaddress += pitch;
-            srcaddress += gfx_virtualxsize;
-        }
-        break;
-
-        case GFX_SCANLINES:
-        for (c = 0; c < gfx_virtualysize; c++)
-        {
-            d = gfx_virtualxsize;
-            while (d--)
-            {
-                *destaddress = *srcaddress;
-                destaddress++;
-                *destaddress = *srcaddress;
-                destaddress++;
-                srcaddress++;
-            }
-            destaddress += pitch*2 - (gfx_virtualxsize << 1);
-        }
-        break;
-
-        case GFX_DOUBLESIZE:
-        for (c = 0; c < gfx_virtualysize; c++)
-        {
             d = gfx_virtualxsize;
             while (d--)
             {
@@ -512,6 +492,61 @@ void gfx_copyscreen8(Uint8  *destaddress, Uint8  *srcaddress, unsigned pitch)
                 srcaddress++;
             }
             destaddress += pitch - (gfx_virtualxsize << 1);
+        }
+        break;
+
+        case GFX_SCANLINES:
+        for (c = 0; c < gfx_virtualysize; c++)
+        {
+            d = gfx_virtualxsize;
+            while (d--)
+            {
+                *destaddress = *srcaddress;
+                destaddress++;
+                *destaddress = *srcaddress;
+                destaddress++;
+                *destaddress = *srcaddress;
+                destaddress++;
+                *destaddress = *srcaddress;
+                destaddress++;
+                srcaddress++;
+            }
+            destaddress += pitch*4 - (gfx_virtualxsize << 2);
+        }
+        break;
+
+        case GFX_DOUBLESIZE:
+        for (c = 0; c < gfx_virtualysize; c++)
+        {
+            d = gfx_virtualxsize;
+            while (d--)
+            {
+                *destaddress = *srcaddress;
+                destaddress++;
+                *destaddress = *srcaddress;
+                destaddress++;
+                *destaddress = *srcaddress;
+                destaddress++;
+                *destaddress = *srcaddress;
+                destaddress++;
+                srcaddress++;
+            }
+            destaddress += pitch*2 - (gfx_virtualxsize << 2);
+            srcaddress -= gfx_virtualxsize;
+            d = gfx_virtualxsize;
+            while (d--)
+            {
+                *destaddress = *srcaddress;
+                destaddress++;
+                *destaddress = *srcaddress;
+                destaddress++;
+                *destaddress = *srcaddress;
+                destaddress++;
+                *destaddress = *srcaddress;
+                destaddress++;
+                srcaddress++;
+            }
+            destaddress += pitch*2 - (gfx_virtualxsize << 2);
         }
         break;
     }
