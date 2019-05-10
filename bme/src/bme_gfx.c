@@ -248,6 +248,12 @@ void gfx_calcpalette(int fade, int radd, int gadd, int badd)
     if (gadd < 0) gadd = 0;
     if (badd < 0) badd = 0;
 
+    if (gfx_scanlinemode)
+    {
+        /* increasing screen size lowers brightness */
+        fade += 20;
+    }
+
     for (c = 1; c < 255; c++)
     {
         cl = *sptr;
@@ -550,6 +556,9 @@ void gfx_copyscreen8(Uint8  *destaddress, Uint8  *srcaddress, unsigned pitch)
         }
         break;
     }
+    /* increasing screen size lowers brightness */
+    gfx_calcpalette(64, 0, 0, 0);
+    gfx_setpalette();
 }
 
 void gfx_plot(int x, int y, int color)
