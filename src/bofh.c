@@ -58,6 +58,9 @@ int sfxvolume = 96;
 int xpos, ypos;
 char mutesound = 0;
 char mouseinitted = 0;
+int controlscheme = CTRL_ABSOLUTE;
+unsigned mouseposx = 0;
+unsigned mouseposy = 0;
 int mousemovex = 0;
 int mousemovey = 0;
 int prevmovex = 0;
@@ -1782,20 +1785,30 @@ void drawsight(void)
 {
         int xp, yp, dx, dy, sx, sy;
 
-        xp = (actor[0].x & 0xffffff00) + 60 * sintable[actor[0].angle];
-        yp = (actor[0].y & 0xffffff00) - 60 * sintable[actor[0].angle+COS];
-        xp -= xshift;
-        xp -= yshift;
-        xp -= (xpos & 0xffffff00);
-        yp -= (ypos & 0xffffff00);
+        if (controlscheme == CTRL_ABSOLUTE)
+        {
+                xp = mouseposx * DEC;
+                yp = mouseposy * DEC;
+        }
+        else
+        {
+                xp = (actor[0].x & 0xffffff00) + 60 * sintable[actor[0].angle];
+                yp = (actor[0].y & 0xffffff00) - 60 * sintable[actor[0].angle+COS];
+                xp -= xshift;
+                xp -= yshift;
+                xp -= (xpos & 0xffffff00);
+                yp -= (ypos & 0xffffff00);
+        }
 
         /* Ugly code to draw the dotted sight line. :-) */
         if (sightline)
         {
+
 		sx = actor[0].x - (xpos & 0xffffff00);
 		sy = actor[0].y - (ypos & 0xffffff00);
 		dx = (xp - sx)/16;
 		dy = (yp - sy)/16;
+
 
 		gfx_plot((sx + dx * 2)/DEC, (sy + dy * 2)/DEC, 39);
 		gfx_plot((sx + dx * 3)/DEC, (sy + dy * 3)/DEC, 39);
@@ -2397,6 +2410,7 @@ void updatemouse(void)
 
         mouseb = mou_getbuttons();
         mou_getmove(&mousemovex, &mousemovey);
+        mou_getpos(&mouseposx, &mouseposy);
 
         avgmovex = (mousemovex + prevmovex) / 2;
         avgmovey = (mousemovey + prevmovey) / 2;
