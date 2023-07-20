@@ -120,12 +120,17 @@ HISCORE_ENTRY hiscore[] = {{"BURZUM", 10000},
 
 char *menutext[] = {"START GAME", "OPTIONS", "HIGHSCORE", "INTRO", "EXIT"};
 char *difftext[] = {"PRACTICE", "EASY", "MEDIUM", "HARD", "INSANE"};
-char *keytext[] = {
+#define KEYTEXTNUM 23
+char *keytext[KEYTEXTNUM] = {
 	"MOVE FWD", "MOVE BWD", "TURN LEFT", "TURN RIGHT", "STRAFE LEFT",
 	"STRAFE RIGHT", "STRAFE KEY", "WALK KEY", "ATTACK", "NEXT WEAPON",
 	"PREV WEAPON", "PAUSE KEY", "TOGGLE SIGHT LINE", "TOGGLE MUSIC",
 	"VIEW NOTES", "CUT RED", "CUT GREEN", "CUT BLUE", "CUT YELLOW",
-	"MOUSE ATTACK",	"MOUSE NEXT WEAPON", "MOUSE PREV WEAPON"
+	"MOUSE ATTACK",	"MOUSE NEXT WEAPON", "MOUSE PREV WEAPON",
+	"CONTROL SCHEME:"
+};
+char *controlschemetext[CTRLNUM] = {
+	"RELATIVE", "ABSOLUTE"
 };
 SAMPLE *smp[MAX_SMP];
 char *samplename[] = {
@@ -594,6 +599,7 @@ void loadconfig(void)
 	fread(&mousenextweap, sizeof mousenextweap, 1, handle);
 	fread(&mousenextweap, sizeof mousenextweap, 1, handle);
 	fread(&mousesens,   sizeof mousesens,   1, handle);
+	fread(&controlscheme,   sizeof controlscheme,   1, handle);
 	fclose(handle);
 }
 
@@ -628,6 +634,7 @@ void saveconfig(void)
 	fwrite(&mousenextweap, sizeof mousenextweap, 1, handle);
 	fwrite(&mouseprevweap, sizeof mouseprevweap, 1, handle);
 	fwrite(&mousesens,   sizeof mousesens,   1, handle);
+	fwrite(&controlscheme,   sizeof controlscheme,   1, handle);
 	fclose(handle);
 }
 
@@ -889,12 +896,16 @@ int optionsmenu(void)
 				((mouseb & MOUSEB_LEFT) && (!(prevmouseb & MOUSEB_LEFT))))
 		{
 			playfx(FXCHAN_ENEMYSHOOT, SMP_SHOTGUN, 22050, 64, 128);
-			if (keyselect > 18)
+			if (18 < keyselect && keyselect < 22)
 			{
 				buttoncode = buttondialog();
 				if (keyselect == 19) mouseattack = buttoncode;
 				if (keyselect == 20) mousenextweap = buttoncode;
 				if (keyselect == 21) mouseprevweap = buttoncode;
+			}
+			else if (keyselect == 22)
+			{
+				controlscheme = (controlscheme + 1) % CTRLNUM;
 			}
 			else
 			{
@@ -929,10 +940,10 @@ int optionsmenu(void)
 		if (key == KEY_RIGHT) mousesens -=1;
 
 		move += mousemovey;
-		while ((move >= 22*64) || (move < 0))
+		while ((move >= KEYTEXTNUM*64) || (move < 0))
 		{
-			if (move >= 22*64) move -= 22*64;
-			if (move < 0) move += 22*64;
+			if (move >= KEYTEXTNUM*64) move -= KEYTEXTNUM*64;
+			if (move < 0) move += KEYTEXTNUM*64;
 		}
 
 		if (mousesens > 99) mousesens = 99;
@@ -946,7 +957,7 @@ int optionsmenu(void)
 		}
 
 		fireeffect();
-		for (c = 0; c < 22; c++)
+		for (c = 0; c < KEYTEXTNUM; c++)
 		{
 			if (((c == keyselect) && (flash & 16)) || (c != keyselect))
 			{
@@ -957,6 +968,9 @@ int optionsmenu(void)
 		txt_print(190, 10, SPR_SMALLFONTS, "MOUSE SENSITIVITY:");
                 sprintf(textbuf, "%d", -(mousesens - 100)); 
 		txt_print(230, 20, SPR_SMALLFONTS, textbuf);
+
+		txt_print(230, 70, SPR_SMALLFONTS, controlschemetext[controlscheme]);
+
 		txt_print(145, 170, SPR_SMALLFONTS, "USE UP & DOWN TO NAVIGATE");
 		txt_print(145, 180, SPR_SMALLFONTS, "LEFT & RIGHT TO CHANGE MOUSE SENS");
 		txt_print(145, 190, SPR_SMALLFONTS, "ENTER TO SELECT AND ESC TO EXIT");
