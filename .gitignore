@@ -1,0 +1,26 @@
+# Intermediate build artifacts
+*.o
+*.a
+*.so.0
+
+# Executables
+bofh
+bofhedit
+bmeconv
+bmeplay
+bme/datafile
+bme/dat2inc
+bme/infedit
+bme/mapedit
+
+# Generated resource files
+*.blk
+*.pal
+*.raw
+*.spr
+bme/src/mapdata.c
+bme/src/mapedit.dat
+
+# Config and hi-score
+bofh.cfg
+bofh.hsc
