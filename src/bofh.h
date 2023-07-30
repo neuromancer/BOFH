@@ -304,6 +304,11 @@
 #define EQUIP_CISCO_SWITCH 4
 #define EQUIP_RJ45RIMA 5
 
+/* Player control schemes. */
+#define CTRL_RELATIVE 0
+#define CTRL_ABSOLUTE 1
+#define CTRLNUM 2
+
 typedef struct
 {
 	int samplenum;

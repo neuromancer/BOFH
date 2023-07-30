@@ -1190,7 +1190,7 @@ int checkblockvision(int ex, int ey)
 
 void playercontrol(ACTOR *aptr)
 {
-        int want_walk = 0;      /* back<0<ahead */
+        int want_walk = 0;      /* back<0<ahead or down<0<up */
         int want_turn = 0;      /* CCW<0<CW */
         int want_strafe = 0;    /* left<0<right */
 
@@ -1239,20 +1239,30 @@ void playercontrol(ACTOR *aptr)
                         want_strafe = 0;
                 }
         }
-        if (!speedcheat)
+        if (controlscheme == CTRL_ABSOLUTE)
         {
-	        aptr->speedx += (sintable[aptr->angle    ] * want_walk   / 64);
-	        aptr->speedy -= (sintable[aptr->angle+COS] * want_walk   / 64);
-	        aptr->speedx += (sintable[aptr->angle+COS] * want_strafe / 64);
-	        aptr->speedy += (sintable[aptr->angle    ] * want_strafe / 64);
-	}
-	else
+                aptr->speedx += want_strafe * 4;
+                aptr->speedy -= want_walk   * 4;
+                aptr->angle = findangle(aptr->x - xpos, aptr->y - ypos,
+                                        mouseposx * DEC, mouseposy * DEC);
+        }
+        else
         {
-	        aptr->speedx += (sintable[aptr->angle    ] * want_walk   / 32);
-	        aptr->speedy -= (sintable[aptr->angle+COS] * want_walk   / 32);
-	        aptr->speedx += (sintable[aptr->angle+COS] * want_strafe / 32);
-	        aptr->speedy += (sintable[aptr->angle    ] * want_strafe / 32);
-	}
+                aptr->speedx += (sintable[aptr->angle    ] * want_walk   / 64);
+                aptr->speedy -= (sintable[aptr->angle+COS] * want_walk   / 64);
+                aptr->speedx += (sintable[aptr->angle+COS] * want_strafe / 64);
+                aptr->speedy += (sintable[aptr->angle    ] * want_strafe / 64);
+
+                aptr->angle += aptr->angularspeed;
+                aptr->angle += (sintable[aptr->angle    ] * avgmovey/2 / mousesens +
+                                sintable[aptr->angle+COS] * avgmovex/2 / mousesens);
+                aptr->angle &= 0x3ff;
+        }
+        if (speedcheat)
+        {
+                aptr->speedx *= 2;
+                aptr->speedy *= 2;
+        }
 
         /* Friction */
         if (aptr->speedx)
@@ -1282,10 +1292,6 @@ void playercontrol(ACTOR *aptr)
 		}
 	}
 
-	aptr->angle += aptr->angularspeed;
-	aptr->angle += (sintable[aptr->angle    ] * avgmovey/2 / mousesens +
-			sintable[aptr->angle+COS] * avgmovex/2 / mousesens);
-	aptr->angle &= 0x3ff;
 	{
 		int speed = squareroot(aptr->speedx * aptr->speedx +
                                        aptr->speedy * aptr->speedy);
