@@ -28,6 +28,7 @@ int strafekey = KEY_ALT;
 int walkkey = KEY_LEFTSHIFT;
 int attackkey = KEY_SPACE;
 int nextweap = KEY_ENTER;
+int prevweap = KEY_BACKSPACE;
 int pausekey = KEY_P;
 int linekey = KEY_S;
 int musickey = KEY_M;
@@ -38,6 +39,7 @@ int bluekey = KEY_B;
 int yellowkey = KEY_Y;
 unsigned mouseattack = MOUSEB_LEFT;
 unsigned mousenextweap = MOUSEB_RIGHT;
+unsigned mouseprevweap = MOUSEB_MIDDLE;
 int mousesens = 64;
 
 void makecollareas(void)
